@@ -1,4 +1,4 @@
-file-collection-server
+File-Collection-Server
 ======================
 
-File Collection Client-Server System using ZeroMQ
+File Collection Client-Server System using ZeroMQ.
