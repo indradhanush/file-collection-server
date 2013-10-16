@@ -2,5 +2,6 @@
 *.pyc
 *.swp
 \#*
+.*
 venv/
 send_files/
