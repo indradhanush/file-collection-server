@@ -14,7 +14,7 @@ from binascii import hexlify
 import zmq
 
 # local
-import mdp.MDP
+import mdp.MDP as MDP
 from mdp.zhelpers import dump
 
 class Service(object):
