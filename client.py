@@ -8,55 +8,71 @@ Facebook: https://www.facebook.com/Indradhanush
 """
 
 import zmq
-from mdp.client import MDPClient, RequestTimeout, mdp_request
+
+import os
+import sys
+
+#local
+from mdp.mdpcliapi import MajorDomoClient
+import mdp.MDP as MDP
+from FILE_TRANSFER import N_FILE, S_FILE, R_FILE
 
 
-ENDPOINT = "tcp://127.0.0.1:8887"
+ENDPOINT = "tcp://127.0.0.1:5555"
 SERVICE = "FILE_TRANSFER" #To-Do: Modify to allow more than one service.
 
-class Client(MDPClient):
+#MUST be absolute path. NOT relative path.
+BASE_FILE_PATH = "/home/dhanush/file-collection-server/send_files/" 
+CHUNK_SIZE = 20000
 
-    def on_timeout(self):
-        print "Raising exception."
-        raise RequestTimeout()
+class Client(MajorDomoClient):
+    pass
+    
 
-    def on_message(self, msg):
-        print msg
-        return
+def files_to_send():
+    """Returns a list of files or None if there are no files to send."""
+    # TO DO: Implement a file poller
+    for _, _, files in os.walk(BASE_FILE_PATH):
+        return files
 
-def send_request(socket, service, response=None):
-    if not response:
-        return mdp_request(socket, service, ["CONNECT"], 2)
-    elif response == "CONNECT-OK":
-        # file, name, size = get_file()
-        # return mdp_request(socket, service, ["SEND", name, str(size)], 2)
-        pass
-        
+    
 def main():
-    context = zmq.Context()
-    mdp_client = Client(context, ENDPOINT, SERVICE)
-    mdp_client.request(["CONNECT"])
-    print 'Request...'
+    verbose = '-v' in sys.argv
+    mdp_client = Client(ENDPOINT, verbose)
+    print "Connected"
+    # while True: Rest of code to be in this infinite Loop.
+    files = files_to_send()
+    print files
+    if files:
+        for name in files:
+            print "FILE: ", name
+            file_size = os.path.getsize(os.path.join(BASE_FILE_PATH, name))
+            request = [N_FILE, name, str(file_size)]
+            mdp_client.send(SERVICE, request)
+            print "Sent."
+            while True:
+                response = mdp_client.recv()
+                print "Response: ", response
+                if response is not None:
+                    header = response.pop(0)
+                    if header == S_FILE:
+                        #Start sending the file: The first chunk.
+                        print S_FILE
+                        name = response.pop(0)
+                        chunk = int(response.pop(0))
+                        #name = os.path.join(BASE_FILE_PATH, name)
+                        file = open(os.path.join(BASE_FILE_PATH, name), 'r')
+                        file.seek(chunk, 0)
+                        data = file.read(CHUNK_SIZE)
+                        request = [S_FILE, name, str(chunk), data]
+                        mdp_client.send(SERVICE, request)
+        
+                    elif header == R_FILE:
+                        print R_FILE
+                        name = response.pop(0)
+                        break
 
-    # Connect to server
-    # response = mdp_request(mdp_client.stream.socket, SERVICE, ["CONNECT"], 2)
-    # response = send_request(mdp_client.stream.socket, SERVICE)
-    # if response is not None:
-    #     service, response = response
-    # else:
-    #     print "Request Timed Out."
-    #     return
-    # while True:
-    #     if service == SERVICE:
-            # print response
-            # response = send_request(mdp_client.stream.socket, service, response)
-            # raw_input()
-
-
+                        
 if __name__ == '__main__':
     main()
-
-
-
-
 
