@@ -3,5 +3,6 @@
 *.swp
 \#*
 .*
+*.*~
 venv/
 send_files/
