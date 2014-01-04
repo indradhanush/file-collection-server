@@ -21,7 +21,7 @@ from FILE_TRANSFER import N_FILE, S_FILE, R_FILE
 ENDPOINT = "tcp://127.0.0.1:5555"
 SERVICE = "FILE_TRANSFER" #To-Do: Modify to allow more than one service
 
-BASE_FILE_PATH = "/home/dhanush/file-collection-server/recv-files/"
+BASE_FILE_PATH = "/home/dhanush/github.com/file-collection-server/recv_files/"
 CHUNK_SIZE = 20000
 
 
@@ -40,7 +40,6 @@ def main():
         print "Count:", count
         count += 1
         response = mdp_worker.recv(reply)
-        #print response
         header = response.pop(0)
         if header == N_FILE:
             print N_FILE

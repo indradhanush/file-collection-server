@@ -13,12 +13,16 @@ import os
 import sys
 
 
+#MUST be absolute path. NOT relative path.
+BASE_FILE_PATH = "/home/dhanush/github.com/file-collection-server/send_files/" 
+
+
 def generate_files(n, size):
     BASE_FILE_NAME = "test_file_"
     file_count = 1
 
     for i in xrange(n):
-        name = "%s%s" % (BASE_FILE_NAME, str(file_count))
+        name = "%s%s%s" % (BASE_FILE_PATH, BASE_FILE_NAME, str(file_count))
         file = open(name, "wb")
         file.write(os.urandom((1024**2)*size))
         file.close()

@@ -22,7 +22,7 @@ ENDPOINT = "tcp://127.0.0.1:5555"
 SERVICE = "FILE_TRANSFER" #To-Do: Modify to allow more than one service.
 
 #MUST be absolute path. NOT relative path.
-BASE_FILE_PATH = "/home/dhanush/file-collection-server/send_files/" 
+BASE_FILE_PATH = "/home/dhanush/github.com/file-collection-server/send_files/" 
 CHUNK_SIZE = 20000
 
 
