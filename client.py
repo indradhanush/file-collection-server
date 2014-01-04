@@ -25,6 +25,7 @@ SERVICE = "FILE_TRANSFER" #To-Do: Modify to allow more than one service.
 BASE_FILE_PATH = "/home/dhanush/file-collection-server/send_files/" 
 CHUNK_SIZE = 20000
 
+
 class Client(MajorDomoClient):
     pass
     

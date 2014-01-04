@@ -24,12 +24,12 @@ SERVICE = "FILE_TRANSFER" #To-Do: Modify to allow more than one service
 BASE_FILE_PATH = "/home/dhanush/file-collection-server/recv-files/"
 CHUNK_SIZE = 20000
 
+
 class Worker(MajorDomoWorker):
     pass
     
 
 def main():
-
     verbose = '-v' in sys.argv
     print "Verbose:", verbose
     mdp_worker = Worker(ENDPOINT, SERVICE, verbose)
@@ -68,6 +68,7 @@ def main():
             
 if __name__ == '__main__':
     main()
+
 
 
 

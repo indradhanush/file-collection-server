@@ -17,6 +17,7 @@ import zmq
 import mdp.MDP as MDP
 from mdp.zhelpers import dump
 
+
 class Service(object):
     """a single Service"""
     name = None # Service name
@@ -27,6 +28,7 @@ class Service(object):
         self.name = name
         self.requests = []
         self.waiting = []
+
 
 class Worker(object):
     """a Worker, idle or active"""
@@ -39,6 +41,7 @@ class Worker(object):
         self.identity = identity
         self.address = address
         self.expiry = time.time() + 1e-3*lifetime
+
 
 class MajorDomoBroker(object):
     """
@@ -147,6 +150,7 @@ class MajorDomoBroker(object):
 
         if (MDP.W_READY == command):
             assert len(msg) >= 1 # At least, a service name
+
             service = msg.pop(0)
             # Not first command in session or Reserved service name
             if (worker_ready or service.startswith(self.INTERNAL_SERVICE_PREFIX)):
@@ -306,5 +310,6 @@ def main():
     broker.bind("tcp://*:5555")
     broker.mediate()
 
+    
 if __name__ == '__main__':
     main()
